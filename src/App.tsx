@@ -17,6 +17,7 @@ function App() {
     age: 0,
     isAsleep: false,
     isDead: false,
+    action: "idle",
   })
 
   // Current time state
@@ -26,43 +27,34 @@ function App() {
   useEffect(() => {
     const timeTimer = setInterval(() => {
       setCurrentTime(new Date())
-    }, 1000) // Update every 1 second
+    }, 1000)
 
     return () => clearInterval(timeTimer)
   }, [])
 
-  // Update image based on time (only if not doing an action)
+  //Preload assets
   useEffect(() => {
-    if (isDoingAction) return // Don't override during actions!
-
-    const hour = currentTime.getHours()
-
-    // Priority order: sleeping > hungry > idle
-    if (hour >= 20 || hour < 6) {
-      // Between 8pm and 6am - sleeping
-      setImgSrc("/sleeping.png")
-    } else if (tamagotchi.hunger <= 75) {
-      // Hungry during daytime
-      setImgSrc("/hungry.png")
-    } else {
-      // Default idle state
-      setImgSrc("/idle.png")
-    }
-  }, [currentTime, isDoingAction, tamagotchi.hunger]) // Re-run when time, action state, or hunger changes
-
-  // Preload assets to prevent delays
-  useEffect(() => {
-    // Create and preload audio instance
-    clickSound.current = new Audio('/click_sound.mp3')
-    clickSound.current.load()
-
-    // Preload images
-    const images = ['/idle.png', '/eating.png', '/sleeping.png']
-    images.forEach(src => {
-      const img = new Image()
-      img.src = src
-    })
+    preloadAssets()
   }, [])
+
+  //Check sleep state
+  useEffect(() => {
+    const hour = currentTime.getHours()
+    if (hour >= 20 || hour < 6) {
+      setTamagotchi(prev => ({
+        ...prev,
+        action: "Sleep",
+      }))
+    }
+  }, [currentTime])
+  useEffect(() => {
+    if (tamagotchi.hunger <= 75) {
+      setTamagotchi(prev => ({
+        ...prev,
+        action: "Hungry",
+      }))
+    }
+  }, [tamagotchi.hunger])
 
   // Hunger and happiness timers
   useEffect(() => {
@@ -78,7 +70,7 @@ function App() {
         ...prev,
         happiness: Math.max(prev.happiness - 1, 0), // Decrease happiness, min 0
       }))
-    }, 300000)
+    }, 5000)
 
     // Cleanup BOTH timers when component unmounts
     return () => {
@@ -86,6 +78,10 @@ function App() {
       clearInterval(happinessTimer)
     }
   }, [])
+
+  useEffect(() => {
+    setImgSrc(determineImage())
+  }, [tamagotchi.action])
 
   const playSound = () => {
     if (clickSound.current) {
@@ -100,14 +96,18 @@ function App() {
     }
     playSound()
     setIsDoingAction(true) // Prevent time-based image changes
-    setImgSrc("/eating.png")
     setTamagotchi({
       ...tamagotchi,
-      hunger: 100,
+      action: "Eat",
     })
-    // Return to correct state after 5 seconds
     setTimeout(() => {
       setIsDoingAction(false) // Allow time-based changes again - useEffect will set correct image
+      setTamagotchi({
+        ...tamagotchi,
+        hunger: 100,
+        action: "Idle",
+
+      })
     }, 5000)
   }
 
@@ -116,10 +116,68 @@ function App() {
       return
     }
     playSound()
+    setIsDoingAction(true) // Prevent time-based image changes
     setTamagotchi({
       ...tamagotchi,
-      hunger: tamagotchi.hunger - 1,
-      happiness: 100,
+      action: "Play",
+    })
+    setTimeout(() => {
+      setIsDoingAction(false) // Allow time-based changes again - useEffect will set correct image
+      setTamagotchi({
+        ...tamagotchi,
+        happiness: 100,
+        action: "Idle",
+      })
+    }, 5000)
+  }
+
+
+  const whichIdleImage = () => {
+    const images = ["idle.png", "idle2.png", "idle3.png"]
+    const randomImage = images[Math.floor(Math.random() * images.length)]
+    return randomImage
+  }
+
+  const determineImage = () => {
+    if (tamagotchi.action === "Hungry") {
+      return "/hungry.png"
+    }
+    if (tamagotchi.action === "Sleep") {
+      const images = ["sleeping.png", "sleeping2.png", "sleeping3.png"]
+      const randomImage = images[Math.floor(Math.random() * images.length)]
+      return randomImage
+    }
+    if (tamagotchi.action === "Eat") {
+      return "/eating.png"
+    }
+    if (tamagotchi.action === "Play") {
+      const images = ["playing.png", "playing2.png"]
+      const randomImage = images[Math.floor(Math.random() * images.length)]
+      return randomImage
+    }
+    if (tamagotchi.action === "Idle") {
+      return whichIdleImage()
+    }
+    return whichIdleImage()
+  }
+
+  const preloadAssets = () => {
+    // Preload audio
+    clickSound.current = new Audio('/click_sound.mp3')
+    clickSound.current.load()
+
+    // Preload all images
+    const images = [
+      "/idle.png", "/idle2.png", "/idle3.png",
+      "/eating.png", "/eating2.png", "/eating3.png",
+      "/sleeping.png", "/sleeping2.png", "/sleeping3.png",
+      "/hungry.png",
+      "/playing.png", "/playing2.png"
+    ]
+
+    images.forEach(src => {
+      const img = new Image()
+      img.src = src
     })
   }
 
