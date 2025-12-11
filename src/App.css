@@ -1,0 +1,220 @@
+.app {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 2rem;
+  min-height: calc(100vh - 4rem);
+  position: relative;
+}
+
+/* Vertical text sidebars - 90s Japanese style */
+.vertical-sidebar {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  z-index: 100;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.vertical-sidebar-left {
+  left: 0;
+}
+
+.vertical-sidebar-right {
+  right: 0;
+}
+
+.retro-container {
+  background: rgba(254, 249, 231, 0.95);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow:
+    0 8px 32px rgba(61, 40, 23, 0.3),
+    inset 0 0 20px rgba(212, 175, 55, 0.1);
+  border: 3px solid var(--warm-gold);
+  position: relative;
+}
+
+.retro-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='4' height='4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h2v2H0zm2 2h2v2H2z' fill='%238b6914' fill-opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  border-radius: 8px;
+  z-index: 0;
+}
+
+.retro-container>* {
+  position: relative;
+  z-index: 1;
+}
+
+.retro-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: var(--warm-brown);
+  text-shadow: 2px 2px 0px rgba(212, 175, 55, 0.3);
+}
+
+.retro-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: var(--warm-dark-brown);
+}
+
+/* Egg-shaped container for Tamagotchi */
+.egg-container {
+  width: 400px;
+  height: 480px;
+  margin: 2rem auto;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(254, 249, 231, 0.5);
+  border: 3px solid var(--warm-gold);
+  box-shadow:
+    0 8px 24px rgba(61, 40, 23, 0.2),
+    inset 0 0 30px rgba(212, 175, 55, 0.15);
+}
+
+.egg-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tamagotchi shell container - shell overlay on top */
+.tamagotchi-shell {
+  width: 500px;
+  height: 650px;
+  margin: 2rem auto;
+  position: relative;
+}
+
+/* Shell image as overlay - appears ON TOP */
+.tamagotchi-shell::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('/shell.png');
+  /* background-position: 0 0; */
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Screen area inside the shell where character appears */
+.tamagotchi-screen {
+  position: absolute;
+  top: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.tamagotchi-screen .foreground {
+  position: absolute;
+  top: 50px;
+  width: 75%;
+  height: 75%;
+  /* Subtle shadow to blend with background */
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.tamagotchi-screen .background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Fill the entire screen area */
+  z-index: -1;
+  /* Behind the character */
+}
+
+.tamagotchi-buttons {
+  position: absolute;
+  top: 350px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 13;
+
+}
+
+.tamagotchi-buttons button {
+  margin: 1rem;
+  padding: .25rem;
+}
+
+.tamagotchi-info {
+  position: absolute;
+  top: 275px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 325px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 12;
+}
+
+.tamagotchi-info p {
+  margin: .25rem;
+  font-size: 15px;
+  /* Slightly smaller, more readable */
+  font-weight: 750;
+  /* Extra bold for readability */
+  font-family: 'M PLUS 1p', 'Noto Sans JP', monospace;
+  /* text-shadow:
+    1px 1px 0px rgba(254, 249, 231, 0.8),
+    -1px -1px 0px rgba(254, 249, 231, 0.8),
+    1px -1px 0px rgba(254, 249, 231, 0.8),
+    -1px 1px 0px rgba(254, 249, 231, 0.8); */
+}
+
+.tamagotchi-screen::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(152, 216, 68, 0.63) 50%, transparent 50%);
+  background-size: 100% 2px;
+  pointer-events: none;
+}
+
+.tamagotchi-screen img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
