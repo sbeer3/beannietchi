@@ -1,6 +1,6 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
-
+import { Button } from 'react95'
 function App() {
   // Image state - changes based on time
   const [imgSrc, setImgSrc] = useState("/idle.png")
@@ -39,6 +39,9 @@ function App() {
 
   //Check sleep state
   useEffect(() => {
+      if(isDoingAction) {
+      return
+    }
     const hour = currentTime.getHours()
     if (hour >= 20 || hour < 6) {
       setTamagotchi(prev => ({
@@ -48,6 +51,9 @@ function App() {
     }
   }, [currentTime])
   useEffect(() => {
+    if(isDoingAction) {
+      return
+    }
     if (tamagotchi.hunger <= 75) {
       setTamagotchi(prev => ({
         ...prev,
@@ -58,19 +64,22 @@ function App() {
 
   // Hunger and happiness timers
   useEffect(() => {
+    if (isDoingAction) {
+      return
+    }
     const hungerTimer = setInterval(() => {
       setTamagotchi(prev => ({
         ...prev,
         hunger: Math.max(prev.hunger - 1, 0), // Increase hunger, max 100
       }))
-    }, 5000)
+    }, 180000)
 
     const happinessTimer = setInterval(() => {
       setTamagotchi(prev => ({
         ...prev,
         happiness: Math.max(prev.happiness - 1, 0), // Decrease happiness, min 0
       }))
-    }, 5000)
+    }, 300000)
 
     // Cleanup BOTH timers when component unmounts
     return () => {
@@ -91,7 +100,7 @@ function App() {
   }
 
   const feed = () => {
-    if (tamagotchi.hunger === 100) {
+    if (tamagotchi.hunger === 100 || isDoingAction) {
       return
     }
     playSound()
@@ -112,7 +121,7 @@ function App() {
   }
 
   const play = () => {
-    if (tamagotchi.happiness === 100) {
+    if (tamagotchi.happiness === 100 || isDoingAction) {
       return
     }
     playSound()

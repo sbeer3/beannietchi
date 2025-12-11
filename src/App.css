@@ -172,6 +172,7 @@
 .tamagotchi-buttons button {
   margin: 1rem;
   padding: .25rem;
+  background-color: rgb(228, 228, 228);
 }
 
 .tamagotchi-info {
@@ -190,14 +191,15 @@
   margin: .25rem;
   font-size: 15px;
   /* Slightly smaller, more readable */
-  font-weight: 750;
+  font-weight: 800;
   /* Extra bold for readability */
   font-family: 'M PLUS 1p', 'Noto Sans JP', monospace;
+  color:black;
   /* text-shadow:
-    1px 1px 0px rgba(254, 249, 231, 0.8),
-    -1px -1px 0px rgba(254, 249, 231, 0.8),
-    1px -1px 0px rgba(254, 249, 231, 0.8),
-    -1px 1px 0px rgba(254, 249, 231, 0.8); */
+    1px 1px 0px rgb(28, 199, 12),
+    -1px -1px 0px rgb(28, 199, 12),
+    1px -1px 0px rgb(28, 199, 12),
+    -1px 1px 0px rgb(28, 199, 12), */
 }
 
 .tamagotchi-screen::after {
