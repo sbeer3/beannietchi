@@ -1,8 +1,7 @@
 .app {
   max-width: 1200px;
-  margin: 2rem auto;
-  padding: 2rem;
-  min-height: calc(100vh - 4rem);
+  margin: 0 auto;
+  padding: 1rem;
   position: relative;
 }
 
@@ -101,7 +100,7 @@
 .tamagotchi-shell {
   width: 500px;
   height: 650px;
-  margin: 2rem auto;
+  margin: 0 auto;
   position: relative;
 }
 
