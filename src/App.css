@@ -194,7 +194,7 @@
   font-weight: 800;
   /* Extra bold for readability */
   font-family: 'M PLUS 1p', 'Noto Sans JP', monospace;
-  color:black;
+  color: black;
   /* text-shadow:
     1px 1px 0px rgb(28, 199, 12),
     -1px -1px 0px rgb(28, 199, 12),
@@ -236,10 +236,9 @@
   }
 
   .tamagotchi-screen {
-    top: 36%;
+    top: 28%;
     width: 60%;
-    height: auto;
-    aspect-ratio: 1;
+    height: 46%;
   }
 
   .tamagotchi-screen .foreground {
@@ -270,6 +269,11 @@
 @media (max-width: 480px) {
   .tamagotchi-shell {
     width: 95vw;
+  }
+
+  .tamagotchi-screen {
+    top: 28%;
+    height: 46%;
   }
 
   .tamagotchi-buttons button {
