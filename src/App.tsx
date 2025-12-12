@@ -121,14 +121,14 @@ function App() {
         ...prev,
         hunger: Math.max(prev.hunger - 1, 0), // Increase hunger, max 100
       }))
-    }, 5000)
+    }, 180000)
 
     const happinessTimer = setInterval(() => {
       setTamagotchi(prev => ({
         ...prev,
         happiness: Math.max(prev.happiness - 1, 0), // Decrease happiness, min 0
       }))
-    }, 8000)
+    }, 300000)
 
     // Cleanup BOTH timers when component unmounts or when isDoingAction changes
     return () => {
@@ -166,7 +166,7 @@ function App() {
         action: "Idle",
 
       })
-    }, 180000)
+    }, 5000)
   }
 
   const play = () => {
@@ -186,7 +186,7 @@ function App() {
         happiness: 100,
         action: "Idle",
       })
-    }, 300000)
+    }, 5000)
   }
 
 

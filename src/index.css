@@ -41,7 +41,7 @@ body {
   margin: 0;
   min-width: 320px;
   height: 100vh;
-  overflow-x: hidden;
+  overflow: hidden;
   background: linear-gradient(135deg, #221e13 0%, #1b1201 100%);
   background-attachment: fixed;
 }
