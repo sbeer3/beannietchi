@@ -220,3 +220,65 @@
   object-fit: contain;
   image-rendering: pixelated;
 }
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+  .app {
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+
+  .tamagotchi-shell {
+    width: 90vw;
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 500 / 650;
+  }
+
+  .tamagotchi-screen {
+    top: 36%;
+    width: 60%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .tamagotchi-screen .foreground {
+    top: 16%;
+  }
+
+  .tamagotchi-buttons {
+    top: 54%;
+    width: 60%;
+  }
+
+  .tamagotchi-buttons button {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+  }
+
+  .tamagotchi-info {
+    top: 42%;
+  }
+
+  .tamagotchi-info p {
+    font-size: 12px;
+    margin: 0.15rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tamagotchi-shell {
+    width: 95vw;
+  }
+
+  .tamagotchi-buttons button {
+    margin: 0.3rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 12px;
+  }
+
+  .tamagotchi-info p {
+    font-size: 11px;
+  }
+}

@@ -1,6 +1,19 @@
 import './App.css'
 import { useState, useEffect, useRef } from 'react'
-import { Button } from 'react95'
+
+const STORAGE_KEY = 'beannie-tchi-state'
+
+interface TamagotchiState {
+  name: string
+  hunger: number
+  happiness: number
+  sleep: number
+  age: number
+  isAsleep: boolean
+  isDead: boolean
+  action: string
+}
+
 function App() {
   // Image state - changes based on time
   const [imgSrc, setImgSrc] = useState("/idle.png")
@@ -9,15 +22,42 @@ function App() {
   // Persistent audio instance - no delay!
   const clickSound = useRef<HTMLAudioElement | null>(null)
 
-  const [tamagotchi, setTamagotchi] = useState({
-    name: "Beannie-tchi",
-    hunger: 100,
-    happiness: 100,
-    sleep: 100,
-    age: 0,
-    isAsleep: false,
-    isDead: false,
-    action: "idle",
+  const [tamagotchi, setTamagotchi] = useState<TamagotchiState>(() => {
+    // Load from localStorage on initial mount
+    const saved = localStorage.getItem(STORAGE_KEY)
+    if (saved) {
+      try {
+        const { state, timestamp } = JSON.parse(saved)
+        const now = Date.now()
+        const minutesElapsed = (now - timestamp) / 1000 / 60
+
+        // Calculate stat decay while app was closed
+        // Hunger decreases by 1 every 3 minutes (180000ms = 3min)
+        // Happiness decreases by 1 every 5 minutes (300000ms = 5min)
+        const hungerDecay = Math.floor(minutesElapsed / 3)
+        const happinessDecay = Math.floor(minutesElapsed / 5)
+
+        return {
+          ...state,
+          hunger: Math.max(state.hunger - hungerDecay, 0),
+          happiness: Math.max(state.happiness - happinessDecay, 0),
+        }
+      } catch (e) {
+        console.error('Failed to load saved state:', e)
+      }
+    }
+
+    // Default initial state
+    return {
+      name: "Beannie-tchi",
+      hunger: 100,
+      happiness: 100,
+      sleep: 100,
+      age: 0,
+      isAsleep: false,
+      isDead: false,
+      action: "idle",
+    }
   })
 
   // Current time state
@@ -37,9 +77,18 @@ function App() {
     preloadAssets()
   }, [])
 
+  // Save to localStorage whenever tamagotchi state changes
+  useEffect(() => {
+    const dataToSave = {
+      state: tamagotchi,
+      timestamp: Date.now()
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave))
+  }, [tamagotchi])
+
   //Check sleep state
   useEffect(() => {
-      if(isDoingAction) {
+    if (isDoingAction) {
       return
     }
     const hour = currentTime.getHours()
@@ -51,7 +100,7 @@ function App() {
     }
   }, [currentTime])
   useEffect(() => {
-    if(isDoingAction) {
+    if (isDoingAction) {
       return
     }
     if (tamagotchi.hunger <= 75) {
@@ -72,21 +121,21 @@ function App() {
         ...prev,
         hunger: Math.max(prev.hunger - 1, 0), // Increase hunger, max 100
       }))
-    }, 180000)
+    }, 5000)
 
     const happinessTimer = setInterval(() => {
       setTamagotchi(prev => ({
         ...prev,
         happiness: Math.max(prev.happiness - 1, 0), // Decrease happiness, min 0
       }))
-    }, 300000)
+    }, 8000)
 
-    // Cleanup BOTH timers when component unmounts
+    // Cleanup BOTH timers when component unmounts or when isDoingAction changes
     return () => {
       clearInterval(hungerTimer)
       clearInterval(happinessTimer)
     }
-  }, [])
+  }, [isDoingAction])
 
   useEffect(() => {
     setImgSrc(determineImage())
@@ -117,7 +166,7 @@ function App() {
         action: "Idle",
 
       })
-    }, 5000)
+    }, 180000)
   }
 
   const play = () => {
@@ -137,7 +186,7 @@ function App() {
         happiness: 100,
         action: "Idle",
       })
-    }, 5000)
+    }, 300000)
   }
 
 
