@@ -21,7 +21,8 @@ function App() {
 
   // Persistent audio instance - no delay!
   const clickSound = useRef<HTMLAudioElement | null>(null)
-
+  const [isAsleep, setIsAsleep] = useState(false)
+  //Tamagotchi state
   const [tamagotchi, setTamagotchi] = useState<TamagotchiState>(() => {
     // Load from localStorage on initial mount
     const saved = localStorage.getItem(STORAGE_KEY)
@@ -93,9 +94,10 @@ function App() {
     }
     const hour = currentTime.getHours()
     if (hour >= 20 || hour < 6) {
+      setIsAsleep(true)
       setTamagotchi(prev => ({
         ...prev,
-        action: "Sleep",
+        action: "Idle",
       }))
     }
   }, [currentTime])
@@ -200,7 +202,7 @@ function App() {
     if (tamagotchi.action === "Hungry") {
       return "/hungry.png"
     }
-    if (tamagotchi.action === "Sleep") {
+    if (tamagotchi.action === "Idle" && isAsleep) {
       const images = ["sleeping.png", "sleeping2.png", "sleeping3.png"]
       const randomImage = images[Math.floor(Math.random() * images.length)]
       return randomImage
@@ -213,7 +215,7 @@ function App() {
       const randomImage = images[Math.floor(Math.random() * images.length)]
       return randomImage
     }
-    if (tamagotchi.action === "Idle") {
+    if (tamagotchi.action === "Idle" && !isAsleep) {
       return whichIdleImage()
     }
     return whichIdleImage()
